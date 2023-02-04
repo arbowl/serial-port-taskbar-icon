@@ -70,13 +70,13 @@ class UsbScanner(QObject):
         for device in devices_to_scan_for:
             all_devices[device] = UsbDevice(
                     device,
-                    device['Send'],
-                    device['Receive'],
-                    device['Baudrate']
+                    devices_to_scan_for[device]['Send'],
+                    devices_to_scan_for[device]['Receive'],
+                    devices_to_scan_for[device]['Baudrate']
             )
         accounted_for_devices = []
         while self.is_running():
-            unaccounted_for_devices = [device for device in all_devices if not device.connection]
+            unaccounted_for_devices = [device for device in all_devices.values() if not device.connection]
             com_list = [comport.device for comport in serial.tools.list_ports.comports()]
             for com_port in com_list:
                 port = com_port[3:]
@@ -93,9 +93,9 @@ class UsbScanner(QObject):
 def update_tooltip(update: str) -> None:
     tray_icon.setToolTip(update)
     if update:
-        tray_icon.setIcon(icons + 'usb_connection.png')
+        tray_icon.setIcon(QIcon(icons + 'usb_connection.png'))
     else:
-        tray_icon.setIcon(icons + 'usb_no_connection.png')
+        tray_icon.setIcon(QIcon(icons + 'usb_no_connection.png'))
 
 
 if __name__ == '__main__':
@@ -105,7 +105,7 @@ if __name__ == '__main__':
     app = QApplication([])
     app.setQuitOnLastWindowClosed(False)
     tray_icon = QSystemTrayIcon()
-    tray_icon.setIcon(icons + 'usb.png')
+    tray_icon.setIcon(QIcon(icons + 'usb_no_connection.png'))
     tray_icon.setVisible(True)
     
     scanning_thread = QThread()
@@ -121,7 +121,7 @@ if __name__ == '__main__':
     quit_app = QAction('Quit')
     quit_app.triggered.connect(scanner.stop)
     quit_app.triggered.connect(app.quit)
-    right_click_menu.addAction(quit)
+    right_click_menu.addAction(quit_app)
     tray_icon.setContextMenu(right_click_menu)
     
     app.exec()
