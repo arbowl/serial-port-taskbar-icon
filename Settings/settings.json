@@ -1,0 +1,17 @@
+{
+    "Devices to Scan For":
+    {
+        "Device 1":
+        {
+            "Send":     "x",
+            "Receive":  "x",
+            "Baudrate": "115200"
+        },
+        "Device 2":
+        {
+            "Send":     "y",
+            "Receive":  "y",
+            "Baudrate": "9600"
+        }
+    }
+}
